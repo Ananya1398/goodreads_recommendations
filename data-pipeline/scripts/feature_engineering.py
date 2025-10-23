@@ -30,7 +30,7 @@ client = bigquery.Client(project=PROJECT_ID)
 # -----------------------------------------------------------------------------
 query = f"""
 -- ==============================================================
--- 🟦 BOOK-LEVEL FEATURES
+-- BOOK-LEVEL FEATURES
 -- ==============================================================
 WITH base_books AS (
   SELECT
@@ -58,7 +58,7 @@ WITH base_books AS (
   FROM `{BOOKS_TABLE}`
 ),
 
--- ✅ Compute 80th percentile threshold using APPROX_QUANTILES
+-- Compute 80th percentile threshold using APPROX_QUANTILES
 threshold AS (
   SELECT 
     APPROX_QUANTILES(adjusted_average_rating, 100)[OFFSET(80)] AS rating_threshold
@@ -78,7 +78,7 @@ book_final AS (
 ),
 
 -- ==============================================================
--- 🟨 USER-LEVEL FEATURES
+-- USER-LEVEL FEATURES
 -- ==============================================================
 user_features AS (
   SELECT
@@ -104,7 +104,7 @@ user_features AS (
 ),
 
 -- ==============================================================
--- 🟩 INTERACTION-LEVEL FEATURES
+-- INTERACTION-LEVEL FEATURES
 -- ==============================================================
 interaction_features AS (
   SELECT
@@ -126,7 +126,7 @@ interaction_features AS (
 ),
 
 -- ==============================================================
--- 🧩 FINAL MERGE
+-- FINAL MERGE
 -- ==============================================================
 merged AS (
   SELECT
@@ -164,10 +164,10 @@ job_config = bigquery.QueryJobConfig(
     write_disposition="WRITE_TRUNCATE"
 )
 
-print("🚀 Running BigQuery feature engineering query...")
+print("Running BigQuery feature engineering query...")
 query_job = client.query(query, job_config=job_config)
 query_job.result()
-print(f"✅ Features table successfully created: {DESTINATION_TABLE}")
+print(f"Features table successfully created: {DESTINATION_TABLE}")
 
 # -----------------------------------------------------------------------------
 # Optional: Save local sample
@@ -177,4 +177,4 @@ SAMPLE_PATH = "../data/processed/features_sample.csv"
 
 sample_df = client.query(f"SELECT * FROM `{DESTINATION_TABLE}` LIMIT 500").to_dataframe()
 sample_df.to_csv(SAMPLE_PATH, index=False)
-print(f"📁 Local sample saved: {SAMPLE_PATH}")
+print(f"Local sample saved: {SAMPLE_PATH}")
